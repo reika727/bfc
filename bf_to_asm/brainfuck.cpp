@@ -32,8 +32,8 @@ std::string brainfuck::translator::get_code() const
 
 void brainfuck::translator::prologue()
 {
-    alw.write(".globl main");
-    alw.write_label("main");
+    alw.write(".globl _start");
+    alw.write_label("_start");
     alw.write_instruction("push", "%rbp");
     alw.write_instruction("mov", "%rsp", "%rbp");
     alw.write_instruction("call", "bf_initialize");
@@ -45,9 +45,10 @@ void brainfuck::translator::epilogue()
         throw std::runtime_error("bracket correspondence error");
     }
     alw.write_instruction("call", "bf_finalize");
-    alw.write_instruction("mov", 0, "%eax");
     alw.write_instruction("pop", "%rbp");
-    alw.write("ret");
+    alw.write_instruction("mov", 0, "%rdi");
+    alw.write_instruction("mov", 60, "%rax");
+    alw.write("syscall");
 }
 
 void brainfuck::translator::increment_ptr(const unsigned int n)
