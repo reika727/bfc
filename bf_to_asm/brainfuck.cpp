@@ -45,6 +45,7 @@ void brainfuck::translator::epilogue()
         throw std::runtime_error("bracket correspondence error");
     }
     alw.write_instruction("call", "bf_finalize");
+    alw.write_instruction("mov", "%rbp", "%rsp");
     alw.write_instruction("pop", "%rbp");
     alw.write_instruction("mov", 0, "%rdi");
     alw.write_instruction("mov", 60, "%rax");
