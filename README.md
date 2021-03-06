@@ -1,5 +1,9 @@
 # bfc
 Brainf\*\*kのコンパイラです。
+
+こっちの解説も見ていってください。
+
+https://qiita.com/reika727/items/5ad1760b8b4ca1d37922
 # ファイルの説明
 ## libbf.c
 ライブラリです。いろいろな変数やら関数やらが定義されています。
@@ -9,8 +13,8 @@ Brainf\*\*kソースを受け取り、それをアセンブリ言語(64ビット
 ```bash
 $ echo ">>+<<" > sample.bf
 $ ./bf_to_asm sample.bf
-.globl main
-main:
+.globl _start
+_start:
 push %rbp
 mov %rsp, %rbp
 call bf_initialize
@@ -30,9 +34,11 @@ jle .bfc_if_2
 call bf_realloc
 .bfc_if_2:
 call bf_finalize
-mov $0, %eax
+mov %rbp, %rsp
 pop %rbp
-ret
+mov $0, %rdi
+mov $60, %rax
+syscall
 ```
 ## Makefile
 bf_to_asmを使って実行ファイルを作るためのスクリプトの代わりです。
