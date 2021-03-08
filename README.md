@@ -26,7 +26,9 @@ jg .bfc_if_1
 call bf_realloc
 .bfc_if_1:
 mov bf_ptr(%rip), %rax
-addq $1, (%rax)
+mov (%rax), %rdi
+addq $1, %rdi
+mov %dil, (%rax)
 subq $2, bf_ptr(%rip)
 mov alloc_ptr(%rip), %rax
 cmp bf_ptr(%rip), %rax
