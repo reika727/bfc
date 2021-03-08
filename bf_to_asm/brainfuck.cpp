@@ -78,13 +78,17 @@ void brainfuck::translator::decrement_ptr(const unsigned int n)
 void brainfuck::translator::increment_data(const unsigned int n)
 {
     alw.write_instruction("mov", "bf_ptr(%rip)", "%rax");
-    alw.write_instruction("addq", n, "(%rax)");
+    alw.write_instruction("mov", "(%rax)", "%rdi");
+    alw.write_instruction("addq", n, "%rdi");
+    alw.write_instruction("mov", "%dil", "(%rax)");
 }
 
 void brainfuck::translator::decrement_data(const unsigned int n)
 {
     alw.write_instruction("mov", "bf_ptr(%rip)", "%rax");
-    alw.write_instruction("subq", n, "(%rax)");
+    alw.write_instruction("mov", "(%rax)", "%rdi");
+    alw.write_instruction("subq", n, "%rdi");
+    alw.write_instruction("mov", "%dil", "(%rax)");
 }
 
 void brainfuck::translator::put_current_char(const unsigned int n)
