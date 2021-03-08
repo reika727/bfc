@@ -11,6 +11,11 @@ void assembly_language::writer::write(const std::string &str)
     code << str << std::endl;
 }
 
+void assembly_language::writer::write_instruction(const std::string &opcode)
+{
+    write(opcode);
+}
+
 void assembly_language::writer::write_instruction(const std::string &opcode, const std::string &arg)
 {
     write(opcode + ' ' + arg);

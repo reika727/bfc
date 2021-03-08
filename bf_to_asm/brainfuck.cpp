@@ -36,7 +36,7 @@ void brainfuck::translator::prologue()
     alw.write_label("_start");
     alw.write_instruction("push", "%rbp");
     alw.write_instruction("mov", "%rsp", "%rbp");
-    alw.write_instruction("call", "bf_initialize");
+    alw.write_instruction("call", "bfc_initialize");
 }
 
 void brainfuck::translator::epilogue()
@@ -44,12 +44,12 @@ void brainfuck::translator::epilogue()
     if (!label_stack.empty()) {
         throw std::runtime_error("bracket correspondence error");
     }
-    alw.write_instruction("call", "bf_finalize");
+    alw.write_instruction("call", "bfc_finalize");
     alw.write_instruction("mov", "%rbp", "%rsp");
     alw.write_instruction("pop", "%rbp");
     alw.write_instruction("mov", 0, "%rdi");
     alw.write_instruction("mov", 60, "%rax");
-    alw.write("syscall");
+    alw.write_instruction("syscall");
 }
 
 void brainfuck::translator::increment_ptr(const unsigned int n)
@@ -60,7 +60,7 @@ void brainfuck::translator::increment_ptr(const unsigned int n)
     alw.write_instruction("add", "sz(%rip)", "%rax");
     alw.write_instruction("cmp", "bf_ptr(%rip)", "%rax");
     alw.write_instruction("jg", label);
-    alw.write_instruction("call", "bf_realloc");
+    alw.write_instruction("call", "bfc_realloc");
     alw.write_label(label);
 }
 
@@ -71,7 +71,7 @@ void brainfuck::translator::decrement_ptr(const unsigned int n)
     alw.write_instruction("mov", "alloc_ptr(%rip)", "%rax");
     alw.write_instruction("cmp", "bf_ptr(%rip)", "%rax");
     alw.write_instruction("jle", label);
-    alw.write_instruction("call", "bf_realloc");
+    alw.write_instruction("call", "bfc_realloc");
     alw.write_label(label);
 }
 
@@ -92,9 +92,11 @@ void brainfuck::translator::put_current_char(const unsigned int n)
     repeat(
         n,
         [this] {
-            alw.write_instruction("mov", "bf_ptr(%rip)", "%rax");
-            alw.write_instruction("mov", "(%rax)", "%rdi");
-            alw.write_instruction("call", "putchar");
+            alw.write_instruction("mov", 1, "%rax");
+            alw.write_instruction("mov", 1, "%rdi");
+            alw.write_instruction("mov", "bf_ptr(%rip)", "%rsi");
+            alw.write_instruction("mov", 1, "%rdx");
+            alw.write_instruction("syscall");
         }
     );
 }
@@ -104,9 +106,11 @@ void brainfuck::translator::get_char(const unsigned int n)
     repeat(
         n,
         [this] {
-            alw.write_instruction("call", "getchar");
-            alw.write_instruction("mov", "bf_ptr(%rip)", "%rdi");
-            alw.write_instruction("mov", "%rax", "(%rdi)");
+            alw.write_instruction("mov", 0, "%rax");
+            alw.write_instruction("mov", 0, "%rdi");
+            alw.write_instruction("mov", "bf_ptr(%rip)", "%rsi");
+            alw.write_instruction("mov", 1, "%rdx");
+            alw.write_instruction("syscall");
         }
     );
 }
