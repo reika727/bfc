@@ -36,8 +36,8 @@ call bf_realloc
 call bf_finalize
 mov %rbp, %rsp
 pop %rbp
-mov $0, %rdi
 mov $60, %rax
+mov $0, %rdi
 syscall
 ```
 ## Makefile

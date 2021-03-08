@@ -47,8 +47,8 @@ void brainfuck::translator::epilogue()
     alw.write_instruction("call", "bfc_finalize");
     alw.write_instruction("mov", "%rbp", "%rsp");
     alw.write_instruction("pop", "%rbp");
-    alw.write_instruction("mov", 0, "%rdi");
     alw.write_instruction("mov", 60, "%rax");
+    alw.write_instruction("mov", 0, "%rdi");
     alw.write_instruction("syscall");
 }
 

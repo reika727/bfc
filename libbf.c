@@ -42,14 +42,14 @@ static void* bfc_sbrk(int64_t inc)
 char *alloc_ptr;
 /* 確保されている領域のサイズ */
 u_int64_t sz;
-/* Brainfuckのインストラクションポインタ */
+/* Brainfuckのポインタ */
 char *bf_ptr;
 
 /* 初期化 */
 void bfc_initialize(void)
 {
     /* Brainfuckは最低でも30000バイトのゼロ埋めされた領域を持ち、
-     * インストラクションポインタは初期状態で領域の先頭を指す[要出典] */
+     * ポインタは初期状態で領域の先頭を指す[要出典] */
     bf_ptr = alloc_ptr = (char*)bfc_sbrk(0);
     bfc_sbrk(sz = 30000);
     bfc_memset(alloc_ptr, '\0', sz);
@@ -64,8 +64,7 @@ void bfc_finalize(void)
 /* 領域の再確保 */
 void bfc_realloc(void)
 {
-    /* インストラクションポインタが領域をはみ出した場合、
-     * そのはみ出た分の2倍の領域を足し合わせて再確保する */
+    /* ポインタが領域をはみ出した場合、そのはみ出た分の2倍の領域を足し合わせて再確保する */
     const int64_t offset = bf_ptr - alloc_ptr;
     if (0 <= offset && (u_int64_t)offset < sz) {
         return;
