@@ -1,5 +1,7 @@
 #include "brainfuck.hpp"
 #include <stdexcept>
+#include <unistd.h>
+#include <asm/unistd_64.h>
 
 using namespace std::literals::string_literals;
 
@@ -47,8 +49,8 @@ void brainfuck::translator::epilogue()
     alw.write_instruction("call", "bfc_finalize");
     alw.write_instruction("mov", "%rbp", "%rsp");
     alw.write_instruction("pop", "%rbp");
-    alw.write_instruction("mov", 60, "%rax");
-    alw.write_instruction("mov", 0, "%rdi");
+    alw.write_instruction("mov", __NR_exit, "%rax");
+    alw.write_instruction("mov", EXIT_SUCCESS, "%rdi");
     alw.write_instruction("syscall");
 }
 
@@ -92,8 +94,8 @@ void brainfuck::translator::put_current_char(const unsigned int n)
     repeat(
         n,
         [this] {
-            alw.write_instruction("mov", 1, "%rax");
-            alw.write_instruction("mov", 1, "%rdi");
+            alw.write_instruction("mov", __NR_write, "%rax");
+            alw.write_instruction("mov", STDOUT_FILENO, "%rdi");
             alw.write_instruction("mov", "bf_ptr(%rip)", "%rsi");
             alw.write_instruction("mov", 1, "%rdx");
             alw.write_instruction("syscall");
@@ -106,8 +108,8 @@ void brainfuck::translator::get_char(const unsigned int n)
     repeat(
         n,
         [this] {
-            alw.write_instruction("mov", 0, "%rax");
-            alw.write_instruction("mov", 0, "%rdi");
+            alw.write_instruction("mov", __NR_read, "%rax");
+            alw.write_instruction("mov", STDIN_FILENO, "%rdi");
             alw.write_instruction("mov", "bf_ptr(%rip)", "%rsi");
             alw.write_instruction("mov", 1, "%rdx");
             alw.write_instruction("syscall");
