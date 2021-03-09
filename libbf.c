@@ -1,6 +1,6 @@
 #include <stddef.h>
+#include <syscall.h>
 #include <sys/types.h>
-#include <asm/unistd_64.h>
 
 static int64_t bfc_abs(int64_t n)
 {
@@ -22,12 +22,12 @@ static void* bfc_sbrk(int64_t inc)
     asm (
         "syscall"
         : "=a" (p)
-        : "a" (__NR_brk), "D" (NULL)
+        : "a" (SYS_brk), "D" (NULL)
     );
     asm (
         "syscall"
         :
-        : "a" (__NR_brk), "D" (p + inc)
+        : "a" (SYS_brk), "D" (p + inc)
     );
     return p;
 }
