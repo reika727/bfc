@@ -18,16 +18,14 @@ static void* bfc_sbrk(int64_t inc)
 {
     char *p;
     asm (
-        "mov $12, %%rax\n\t"
-        "mov $0, %%rdi\n\t"
         "syscall"
-        : "=a"(p)
+        : "=a" (p)
+        : "a" (12), "D" (0)
     );
     asm (
-        "mov $12, %%rax\n\t"
         "syscall"
         :
-        : "D" (p + inc)
+        : "a" (12), "D" (p + inc)
     );
     return p;
 }
