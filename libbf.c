@@ -42,8 +42,7 @@ void bfc_initialize(void)
 {
     /* Brainfuckは最低でも30000バイトのゼロ埋めされた領域を持ち、
      * ポインタは初期状態で領域の先頭を指す[要出典] */
-    bf_ptr = alloc_ptr = (char*)bfc_sbrk(0);
-    bfc_sbrk(sz = 30000);
+    bf_ptr = alloc_ptr = (char*)bfc_sbrk(sz = 30000);
     bfc_memset(alloc_ptr, '\0', sz);
 }
 
