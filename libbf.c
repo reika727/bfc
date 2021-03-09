@@ -16,24 +16,18 @@ static void bfc_memset(void *buf, char ch, u_int64_t n)
 
 static void* bfc_sbrk(int64_t inc)
 {
-    static char *current_brk = 0;
-    char *p = current_brk;
-    if (!p) {
-        asm volatile (
-            "mov $12, %%rax\n\t"
-            "mov $0, %%rdi\n\t"
-            "syscall\n\t"
-            "mov %%rax, %0"
-            :"=c"(p)
-        );
-    }
-    asm volatile (
+    char *p;
+    asm (
         "mov $12, %%rax\n\t"
-        "mov %1, %%rdi\n\t"
-        "syscall\n\t"
-        "mov %%rax, %0"
-        :"=c"(current_brk)
-        :"d"(p + inc)
+        "mov $0, %%rdi\n\t"
+        "syscall"
+        : "=a"(p)
+    );
+    asm (
+        "mov $12, %%rax\n\t"
+        "syscall"
+        :
+        : "D" (p + inc)
     );
     return p;
 }
