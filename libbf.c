@@ -9,8 +9,7 @@ static int64_t bfc_abs(int64_t n)
 
 static void bfc_memset(void *buf, char ch, u_int64_t n)
 {
-    u_int64_t i;
-    for (i = 0; i < n; ++i) {
+    for (u_int64_t i = 0; i < n; ++i) {
         *(char*)buf = ch;
         buf = (void*)((char*)buf + 1);
     }
@@ -62,14 +61,13 @@ void bfc_realloc(void)
     if (0 <= offset && (u_int64_t)offset < sz) {
         return;
     }
-    const u_int64_t margin = (offset >= 0 ? offset - (int64_t)sz + 1 : bfc_abs(offset)) * 2;
+    const u_int64_t margin = (offset >= 0 ? offset - sz + 1 : (u_int64_t)bfc_abs(offset)) * 2;
     bfc_sbrk(margin);
     if (offset >= 0) {
         bfc_memset(alloc_ptr + sz, '\0', margin);
     } else {
-        int64_t i;
-        for (i = sz - 1; i >= 0; --i) {
-            alloc_ptr[i + margin] = alloc_ptr[i];
+        for (u_int64_t i = 0; i < sz; ++i) {
+            alloc_ptr[margin + sz - i - 1] = alloc_ptr[sz - i - 1];
         }
         bfc_memset(alloc_ptr, '\0', margin);
         bf_ptr += margin;

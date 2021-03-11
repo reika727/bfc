@@ -1,4 +1,4 @@
-CXXFLAGS := -Wall -Wextra -MMD -MP
+CXXFLAGS := -Wall -Wextra -pedantic-errors -MMD -MP
 SRC      := bf_to_asm.cpp assembly_language.cpp brainfuck.cpp
 OBJ      := $(SRC:%.cpp=%.o)
 DEP      := $(SRC:%.cpp=%.d)

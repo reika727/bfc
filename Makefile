@@ -1,5 +1,5 @@
 SHELL  := /bin/bash
-CFLAGS := -Wall -Wextra
+CFLAGS := -Wall -Wextra -pedantic-errors
 BTA    := bf_to_asm/bf_to_asm
 
 %.out: libbf.o %.o
