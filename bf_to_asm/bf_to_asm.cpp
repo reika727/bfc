@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
         if (!input) {
             throw std::invalid_argument("cannot open file "s + argv[1]);
         }
-        const std::string code((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+        const std::string code{std::istreambuf_iterator<char>(input), std::istreambuf_iterator<char>()};
         std::cout << brainfuck::translate_into_assembly_language(code) << std::endl;
         return EXIT_SUCCESS;
     } catch (const std::exception &e) {
