@@ -125,7 +125,7 @@ void brainfuck::translator::begin_loop()
     label_stack.push(loop_end);
     alw.write_label(loop_begin);
     alw.write_instruction("mov", "bf_ptr(%rip)", "%rax");
-    alw.write_instruction("mov", "(%rax)", "%rax");
+    alw.write_instruction("movzbq", "(%rax)", "%rax");
     alw.write_instruction("cmp", 0, "%al");
     alw.write_instruction("je", loop_end);
 }
