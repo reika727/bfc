@@ -1,4 +1,5 @@
 #include "brainfuck.hpp"
+#include <regex>
 #include <stdexcept>
 #include <syscall.h>
 #include <unistd.h>
@@ -143,20 +144,9 @@ void brainfuck::translator::end_loop()
     alw.write_label(loop_end);
 }
 
-std::string brainfuck::strip(const std::string &code)
-{
-    std::string stripped;
-    for(auto c : code) {
-        if ("><+-.,[]"s.find(c) != std::string::npos) {
-            stripped.push_back(c);
-        }
-    }
-    return stripped;
-}
-
 std::string brainfuck::translate_into_assembly_language(std::string code)
 {
-    code = strip(code);
+    code = std::regex_replace(code, std::regex(R"([^><+-.,\[\]])"), "");
     translator t;
     t.prologue();
     for (std::string::size_type i = 0; i < code.length(); ++i) {

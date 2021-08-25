@@ -32,8 +32,6 @@ namespace brainfuck {
         /* ] */
         void end_loop();
     };
-    /* 入力されたソースから不要な文字を抜き取る関数 */
-    std::string strip(const std::string &code);
     /* translatorを使って得られた翻訳結果を返す */
     std::string translate_into_assembly_language(std::string code);
 }
