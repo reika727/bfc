@@ -10,7 +10,21 @@ namespace brainfuck {
         std::stack<std::string> label_stack;
         std::string get_unique_label(const std::string &prefix) const;
         template<class T>
-        void repeat(const unsigned int rep, const T &operation);
+        void repeat(const unsigned int rep, const T &operation)
+        {
+            const std::string loop_label = get_unique_label(".bfc_loop_");
+            if (rep > 1) {
+                alw.write_instruction("mov", rep, "%rcx");
+                alw.write_label(loop_label);
+                alw.write_instruction("push", "%rcx");
+            }
+            operation();
+            if (rep > 1) {
+                alw.write_instruction("pop", "%rcx");
+                alw.write_instruction("loop", loop_label);
+            }
+        }
+
     public:
         std::string get_code() const;
         void prologue();

@@ -12,22 +12,6 @@ std::string brainfuck::translator::get_unique_label(const std::string &prefix) c
     return prefix + std::to_string(++n);
 }
 
-template<class T>
-void brainfuck::translator::repeat(const unsigned int rep, const T &operation)
-{
-    const std::string loop_label = get_unique_label(".bfc_loop_");
-    if (rep > 1) {
-        alw.write_instruction("mov", rep, "%rcx");
-        alw.write_label(loop_label);
-        alw.write_instruction("push", "%rcx");
-    }
-    operation();
-    if (rep > 1) {
-        alw.write_instruction("pop", "%rcx");
-        alw.write_instruction("loop", loop_label);
-    }
-}
-
 std::string brainfuck::translator::get_code() const
 {
     return alw.get_code();
